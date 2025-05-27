@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lahore AQI Status Dashboard</title> {# Updated Title #}
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; color: #333; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; background-color: #fff; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .anomaly {
+            color: red;
+            font-weight: bold;
+            border: 2px solid red;
+            padding: 10px;
+            background-color: #ffeaea;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .normal {
+            color: green;
+            font-weight: bold;
+            border: 2px solid green;
+            padding: 10px;
+            background-color: #eaffea;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        h1, h2 { color: #0056b3; margin-bottom: 15px; }
+        h1 { text-align: center; margin-bottom: 5px; }
+        p { margin: 5px 0; line-height: 1.5; }
+        strong { color: #555; }
+        .section-title { border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Real-time AQI Status Dashboard for Lahore</h1> {# Updated Heading #}
+        <p style="text-align: center; margin-bottom: 25px; color: #666;">
+            Monitoring current Air Quality Index (AQI) and detecting anomalies in **Lahore, Pakistan**.
+        </p>
+        
+        {% if current_aqi_data %}
+            <h2 class="section-title">Current AQI Reading:</h2>
+            <p><strong>Timestamp:</strong> {{ current_aqi_data.timestamp|date:"Y-m-d H:i:s" }}</p>
+            <p><strong>Actual AQI Value:</strong> {{ current_aqi_data.aqi_value }}</p>
+            <p><strong>Temperature:</strong> {{ current_aqi_data.temperature }}°C</p>
+            <p><strong>Humidity:</strong> {{ current_aqi_data.humidity }}%</p>
+            <p><strong>Wind Speed:</strong> {{ current_aqi_data.wind_speed }} km/h</p>
+
+            <h2 class="section-title">Anomaly Check Result:</h2>
+            {% if current_aqi_data.anomaly_check %}
+                {% if current_aqi_data.anomaly_check.error %}
+                    <p class="anomaly" style="color: purple; border-color: purple; background-color: #f7eafa;">
+                        Error from Anomaly API: {{ current_aqi_data.anomaly_check.error }}
+                    </p>
+                {% elif current_aqi_data.anomaly_check.is_anomaly %}
+                    <div class="anomaly">
+                        <p>STATUS: **ANOMALY DETECTED!**</p>
+                        <p>Predicted Normal Range: [{{ current_aqi_data.anomaly_check.aqi_lower_bound|floatformat:2 }} - {{ current_aqi_data.anomaly_check.aqi_upper_bound|floatformat:2 }}]</p>
+                        <p>Deviation from Normal: {{ current_aqi_data.anomaly_check.deviation|floatformat:2 }}</p>
+                    </div>
+                {% else %}
+                    <div class="normal">
+                        <p>STATUS: Normal</p>
+                        <p>Predicted Normal Range: [{{ current_aqi_data.anomaly_check.aqi_lower_bound|floatformat:2 }} - {{ current_aqi_data.anomaly_check.aqi_upper_bound|floatformat:2 }}]</p>
+                    </div>
+                {% endif %}
+                <p style="margin-top: 15px;"><strong>Predicted Mean AQI:</strong> {{ current_aqi_data.anomaly_check.predicted_mean_aqi|floatformat:2 }}</p>
+            {% else %}
+                <p>No anomaly check data available.</p>
+            {% endif %}
+        {% else %}
+            <p>No AQI data to display.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.pyc
+*.pyd
+*.pyo
+.Python/
+build/
+dist/
+*.egg-info/
+.env
+venv/
+.vscode/ # VS Code specific files, generally okay to ignore
+
+# Django specific
+db.sqlite3
+
+/media/ # If you set up media files, ignore them
+/staticfiles/ # Collected static files should be ignored
+*.log
+
+# Node.js (if you ever use npm/node)
+node_modules/
+npm-debug.log
+
+# macOS specific (if applicable)
+.DS_Store
+
+# Jupyter Notebook (if applicable)
+.ipynb_checkpoints
+
+# Model files
+prophet_aqi_model.pkl   
+# Your model file
